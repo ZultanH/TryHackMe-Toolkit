@@ -93,8 +93,9 @@ def getRunLevel():
 def handleCommand(cmdName):
     for cmdClass in commandArray:
         cmdDict = cmdClass.toJSON()
-        print(cmdDict)
-
+        if cmdDict['name'] == cmdName:
+            cmdDict['func']()
+    main()
 
 """
 Command Definitions
@@ -112,11 +113,11 @@ def createCommands():
     ]
 
 def main():
-    createCommands()
     while True:
         cmdName = input("Enter Command: ")
         handleCommand(cmdName)
     
 if __name__ == "__main__":
     printBanner()
+    createCommands()
     main()
