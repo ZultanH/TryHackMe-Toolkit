@@ -4,6 +4,7 @@ Import Modules
 import os
 from os import system, popen
 from sys import argv
+import sys
 from time import sleep
 import random
 
@@ -114,8 +115,12 @@ def createCommands():
 
 def main():
     while True:
-        cmdName = input("Enter Command: ")
-        handleCommand(cmdName)
+        try:
+            cmdName = input("Enter Command: ")
+            handleCommand(cmdName)
+        except KeyboardInterrupt:
+            info("Exiting...")
+            sys.exit()
     
 if __name__ == "__main__":
     printBanner()
