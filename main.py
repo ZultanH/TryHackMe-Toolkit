@@ -92,7 +92,7 @@ def getRunLevel():
 
 def handleCommand(cmdName):
     for cmdClass in commandArray:
-        cmdDict = cmdClass.toJson()
+        cmdDict = cmdClass.toJSON()
         print(cmdDict)
 
 
