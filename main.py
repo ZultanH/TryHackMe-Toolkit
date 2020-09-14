@@ -17,6 +17,7 @@ red 	= "\033[0;91m"
 blue 	= "\033[0;94m"
 yellow 	= "\033[0;33m"
 magenta = "\033[0;35m"
+
 colorTuple = (cyan, green, white, red, blue, yellow, magenta)
 barLine = "------------------------------"
 
@@ -28,13 +29,44 @@ bannerLines = (
     "           |__/                                                         ",
     'Orpheus#5400'
 )
+commandArray = []
 
+class Command:
+    def __init__(self, name, func, helpText = ""):
+        self.name = name
+        self.func = func
+        commandArray.append(self)
+
+    def run(self):
+        self.func()
+
+    def toJSON(self):
+        return {
+            'name': self.name, 
+            'func': self.func,
+        }
+    
+"""
+Function Definitions
+"""
 def printBanner():
     for line in bannerLines:
-        color = colorTuple[random.randint(0, len(colorTuple))]
+        color = colorTuple[random.randint(0, len(colorTuple) - 1)]
         print("{} {}\n".format(color, line))
 
-def get_processes():
+def warn(string):
+    print(yellow + "[!] " + string) 
+
+def error(string):
+    print(red + "[!] " + string)
+
+def info(string):
+    print(blue + "[i] " + string)
+
+def success(string):
+    print(green + "[i] " + string)
+
+def getProcesses():
     output = popen('ps aux').read()
     headers = [h for h in ' '.join(output[0].strip().split()).split() if h]
     raw_data = map(lambda s: s.strip().split(None, len(headers) - 1), output[1:])
@@ -58,9 +90,33 @@ def getRunLevel():
     output = popen("whoami").read()
     return output
 
+def handleCommand(cmdName):
+    for cmdClass in commandArray:
+        cmdDict = cmdClass.toJson()
+        print(cmdDict)
+
+
+"""
+Command Definitions
+"""
+def listProcsCmd():
+    print("Processes: ")
+    runningProcs = getProcesses()
+    for _dict in runningProcs:
+        print(_dict)
+
+
+def createCommands():
+    commands = [
+        Command("list_processes", listProcsCmd)
+    ]
 
 def main():
-    printBanner()
-
+    createCommands()
+    while True:
+        cmdName = input("Enter Command: ")
+        handleCommand(cmdName)
+    
 if __name__ == "__main__":
+    printBanner()
     main()
