@@ -96,6 +96,7 @@ def handleCommand(cmdName):
         cmdDict = cmdClass.toJSON()
         if cmdDict['name'] == cmdName:
             cmdDict['func']()
+    warn("Command not found... trying again")
     main()
 
 """
@@ -105,7 +106,16 @@ def listProcsCmd():
     print("Processes: ")
     runningProcs = getProcesses()
     for _dict in runningProcs:
-        print(_dict)
+        firstDict = {
+            'USER': _dict['USER'],
+            'PID': _dict['PID'],
+            'COMMAND': _dict['COMMAND'],
+        }
+        secondDict = firstDict.copy()
+        secondDict['TTY'] = _dict['TTY']
+        toPrint = "User [ {USER} ]\nPID: [ {PID} ]\nCommand: {COMMAND}\n".format(**firstDict) if _dict['TTY'] != '?' else \
+        "User [ {USER} ]\nPID: [ {PID} ]\nCommand: {COMMAND}\nTTY: [ {TTY} ]\n".format(**secondDict)
+        print(toPrint)
 
 
 def createCommands():
@@ -114,12 +124,13 @@ def createCommands():
     ]
 
 def main():
+    print('\033[0m')
     while True:
         try:
             cmdName = input("Enter Command: ")
             handleCommand(cmdName)
         except KeyboardInterrupt:
-            info("Exiting...")
+            info("\nExiting...")
             sys.exit()
     
 if __name__ == "__main__":
