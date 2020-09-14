@@ -130,7 +130,8 @@ def main():
             cmdName = input("Enter Command: ")
             handleCommand(cmdName)
         except KeyboardInterrupt:
-            info("\nExiting...")
+            print("\n")
+            info("Exiting...")
             sys.exit()
     
 if __name__ == "__main__":
